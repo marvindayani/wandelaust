@@ -4,43 +4,43 @@ const wrapAsync = require("../utils/wrapAsync.js");
 // const ExpressError = require("../utils/ExpressError.js");
 // const {listingSchema,reviewSchema} = require("../schema.js");
 const Listing = require("../models/listing.js");
-const {isLoggedIn, isOwner , validateListing, validateReview} = require("../middleware.js");
+const { isLoggedIn, isOwner, validateListing, validateReview } = require("../middleware.js");
 
 const listingController = require("../controller/listing.js");
 
 const multer = require("multer");
-const {storage} = require("../cloudConfig.js");
-const upload = multer( {storage}); 
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 
 //new route
 
-router.get("/new",isLoggedIn,listingController.randerNewForm);
+router.get("/new", isLoggedIn, listingController.randerNewForm);
 
 
-router .route("/")
-.get(wrapAsync(listingController.index))
-.post(
+router.route("/")
+  .get(wrapAsync(listingController.index))
+  .post(
     isLoggedIn,
     // validateListing,
     upload.single('listing[image]'),
     wrapAsync(listingController.createListing)
-    
+
   );
 
-  
-router  
-    .route("/:id")
-    .get(wrapAsync(listingController.showListing))
-    .put(isLoggedIn,isOwner, 
-      upload.single('listing[image]'),
-      // validateListing,
-      wrapAsync(listingController.updateListing))
-    .delete(isLoggedIn,isOwner,wrapAsync(listingController.deleteListing));
+
+router
+  .route("/:id")
+  .get(wrapAsync(listingController.showListing))
+  .put(isLoggedIn, isOwner,
+    upload.single('listing[image]'),
+    // validateListing,
+    wrapAsync(listingController.updateListing))
+  .delete(isLoggedIn, isOwner, wrapAsync(listingController.deleteListing));
 
 
 //edit route
-router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingController.editListing));
+router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.editListing));
 
 
 
